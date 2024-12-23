@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@media print {
+  button {
+    display: none;
+  }
+
+  .react-root,
+  .App {
+    display: none;
+  }
+
+  #printCard {
+    -webkit-print-color-adjust: exact; /* Chrome/Edge */
+    print-color-adjust: exact; /* Firefox */
+  }
+}

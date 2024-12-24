@@ -18,7 +18,19 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; image-src 'self' asset: http://asset.localhost",
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$CACHE/**", "**/.cache/**"]
+      }
+    }
+  },
+  "plugins": {
+    "security": {
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$CACHE/**", "**/.cache/**"]
+      }
     }
   },
   "bundle": {

@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { QRCode } from "react-qr-code"; // Import QRCode from react-qr-code
 import img from "../../public/idk.svg";
 import mm from "../../public/images.png";
+import { useLocation, useParams } from "react-router-dom";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 const Card = () => {
+  const location = useLocation();
+  const member = location.state;
+
   const [signImage, setSignImage] = useState(null); // State for storing the signature image
 
   const handleSignChange = (e) => {
@@ -34,9 +39,9 @@ const Card = () => {
         <div className="flex justify-between p-5 gap-10 text-red-800">
           <div className="flex flex-col gap-5 justify-between items-start">
             <div className="text-md">
-              <p>Name (အမည်) : </p>
-              <p>Date of Birth (မွေးရပ်) : </p>
-              <p>Address (လိပ်စာ) : </p>
+              <p>Name (အမည်) : {member.name}</p>
+              <p>Date of Birth (မွေးရပ်) : {member.birthday}</p>
+              <p>Address (လိပ်စာ) : {member.address}</p>
             </div>
             <div className="flex flex-col">
               {/* Signature file input */}
@@ -54,8 +59,7 @@ const Card = () => {
               )}
               <div className="flex self-start text-[12px] gap-5">
                 <p>Initiator Monk</p>
-                <p>Date of Issue</p>
-                <p>Date of Expiry</p>
+                <p>Date of Issue {member.issue_date}</p>
               </div>
             </div>
           </div>
@@ -64,11 +68,11 @@ const Card = () => {
             <div className="w-24 h-24">
               <img
                 className=" object-cover w-full h-full "
-                src="../../public/images.png"
+                src={convertFileSrc(member.image)}
                 alt="User Image"
               />
             </div>
-            <QRCode value="thank you" size={50} />
+            <QRCode value={JSON.stringify(member)} size={50} />
           </div>
         </div>
         {/* Print button */}

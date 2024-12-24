@@ -14,12 +14,25 @@ edition = "2021"
 name = "idk_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
+[profile.release]
+strip = true
+opt-level = 3
+lto = true
+codegen-units = 1
+
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+tauri = { version = "2", features = ["protocol-asset"] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { version = "1.42.0", features = ["full"] }
+surrealdb = { version = "2.1.4", features = ["kv-rocksdb"] }
+directories = "5.0.1"
+lazy_static = "1.5.0"
+async_once = "0.2.6"
+rand = "0.8.5"
+chrono = { version = "0.4.39", default-features = false }
 

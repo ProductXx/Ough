@@ -8,7 +8,10 @@ use lazy_static::lazy_static;
 use tokio::fs;
 
 lazy_static! {
-    pub static ref DIR: String = format!("{}/Ough", BaseDirs::new().unwrap().cache_dir().display().to_string());
+    pub static ref DIR: String = format!(
+        "{}/Ough",
+        BaseDirs::new().unwrap().cache_dir().display().to_string()
+    );
 }
 
 #[tokio::main]

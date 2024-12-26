@@ -35,4 +35,7 @@ lazy_static = "1.5.0"
 async_once = "0.2.6"
 rand = "0.8.5"
 chrono = { version = "0.4.39", default-features = false }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+base64ct = "1.6.0"
 

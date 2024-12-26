@@ -3,18 +3,46 @@ import { QRCode } from "react-qr-code"; // Import QRCode from react-qr-code
 import img from "../../public/idk.svg";
 import mm from "../../public/images.png";
 import { useLocation, useParams } from "react-router-dom";
-import { convertFileSrc } from "@tauri-apps/api/core";
+import { convertFileSrc, invoke } from "@tauri-apps/api/core";
 
 const Card = () => {
   const location = useLocation();
   const member = location.state;
+  const qrdata = {
+    member_id: member.member_id,
+    name: member.name,
+    address: member.address,
+    birthday: member.birthday,
+  };
 
   const [signImage, setSignImage] = useState(null); // State for storing the signature image
 
-  const handleSignChange = (e) => {
+  const converBase64 = async (file) => {
+    try {
+      const resp = await invoke('image_to_base64', {image: Array.from(file)});
+      
+      setSignImage(resp);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
+  const handleSignChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSignImage(URL.createObjectURL(file)); // Create a URL for the uploaded file
+
+      const reader = new FileReader();
+
+      // Use ArrayBuffer for better efficiency
+      reader.onloadend = () => {
+        const arrayBuffer = reader.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        // Send file as binary arrayBuffer
+        converBase64(uint8Array);
+      };
+
+      reader.readAsArrayBuffer(file); // Read file as binary buffer
     }
   };
 
@@ -68,11 +96,11 @@ const Card = () => {
             <div className="w-24 h-24">
               <img
                 className=" object-cover w-full h-full "
-                src={convertFileSrc(member.image)}
+                src={member.image}
                 alt="User Image"
               />
             </div>
-            <QRCode value={JSON.stringify(member)} size={50} />
+            <QRCode value={JSON.stringify(qrdata)} size={50} />
           </div>
         </div>
         {/* Print button */}

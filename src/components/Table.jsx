@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+import { message } from "@tauri-apps/plugin-dialog";
 
 const Table = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +14,6 @@ const Table = () => {
       try {
         const resp = await invoke("get_members");
         setMembers(Array.from(resp)); // Ensure the response is an array
-        console.log(resp);
       } catch (error) {
         console.error("Failed to fetch members:", error);
       }
@@ -29,7 +29,6 @@ const Table = () => {
     try {
       const resp = await invoke("search_member", { search: term });
       setMembers(Array.from(resp)); // Ensure the response is an array
-      console.log(resp);
     } catch (error) {
       console.error("Failed to search member:", error);
     }
@@ -71,7 +70,7 @@ const Table = () => {
               </div>
               <div className="flex justify-center col-span-1 text-center p-2">
                 <img
-                  src={convertFileSrc(member.image) || "../../public/images.png"}
+                  src={member.image || "../../public/images.png"}
                   className="w-20 h-20 rounded object-cover"
                   alt="Member"
                 />

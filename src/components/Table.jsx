@@ -36,7 +36,9 @@ const Table = () => {
   const filteredData = members.filter((item) =>
     item.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+  const handleDelete = () => {
+  return 'leee'
+}
   return (
     <div className="flex flex-col justify-center items-center p-10">
       <div className="flex justify-between items-center w-full ">
@@ -47,15 +49,35 @@ const Table = () => {
         >
           Add Member
         </Link>
+        <button
+          onClick={handleDelete}
+          className="self-end bg-green-600 px-5 py-2 rounded text-white mb-5"
+        >
+          Add Member
+        </button>
       </div>
       <div className="grid grid-cols-7 w-full ">
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">No.</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Photo</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Name</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Birthday</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Address</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Region</div>
-        <div className="col-span-1 border text-center p-2 font-bold text-lg">Action</div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          No.
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Photo
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Name
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Birthday
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Address
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Region
+        </div>
+        <div className="col-span-1 border text-center p-2 font-bold text-lg">
+          Action
+        </div>
       </div>
       <div className="h-[75vh] overflow-y-scroll w-full">
         {filteredData.length > 0 ? (
@@ -69,17 +91,21 @@ const Table = () => {
               </div>
               <div className="flex justify-center col-span-1 text-center p-2">
                 <img
-                  src={convertFileSrc(member.image) || "../../public/images.png"}
+                  src={
+                    convertFileSrc(member.image) || "../../public/images.png"
+                  }
                   className="w-20 h-20 rounded object-cover"
                   alt="Member"
                 />
               </div>
               <div className="col-span-1 text-center p-2">{member.name}</div>
-              <div className="col-span-1 text-center p-2">{member.birthday}</div>
+              <div className="col-span-1 text-center p-2">
+                {member.birthday}
+              </div>
               <div className="col-span-1 text-center p-2">{member.address}</div>
               <div className="col-span-1 text-center p-2">{member.region}</div>
               <Link
-                to='/print'
+                to="/print"
                 state={member}
                 className="col-span-1 flex justify-center items-center"
               >

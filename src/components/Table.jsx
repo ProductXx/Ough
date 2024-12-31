@@ -36,9 +36,11 @@ const Table = () => {
   const filteredData = members.filter((item) =>
     item.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   const handleDelete = () => {
-  return 'leee'
-}
+    return "leee"
+  }
+
   return (
     <div className="flex flex-col justify-center items-center p-10">
       <div className="flex justify-between items-center w-full ">
@@ -49,12 +51,6 @@ const Table = () => {
         >
           Add Member
         </Link>
-        <button
-          onClick={handleDelete}
-          className="self-end bg-green-600 px-5 py-2 rounded text-white mb-5"
-        >
-          Add Member
-        </button>
       </div>
       <div className="grid grid-cols-7 w-full ">
         <div className="col-span-1 border text-center p-2 font-bold text-lg">
@@ -104,15 +100,18 @@ const Table = () => {
               </div>
               <div className="col-span-1 text-center p-2">{member.address}</div>
               <div className="col-span-1 text-center p-2">{member.region}</div>
-              <Link
-                to="/print"
-                state={member}
-                className="col-span-1 flex justify-center items-center"
-              >
-                <div className="rounded transition duration-100 bg-yellow-300 hover:bg-yellow-400 text-center px-4 p-2">
-                  Generate
-                </div>
-              </Link>
+              <div className="col-span-1 flex justify-center items-center">
+                <Link to="/print" state={member}>
+                  <div className="rounded transition duration-100 bg-yellow-300 hover:bg-yellow-400 text-center px-4 p-2">
+                    Generate
+                  </div>
+                </Link>
+                <button onClick={handleDelete} state={member}>
+                  <div className="rounded transition duration-100 bg-red-300 hover:bg-red-400 text-center px-4 p-2">
+                    Delete Member
+                  </div>
+                </button>
+              </div>
             </div>
           ))
         ) : (

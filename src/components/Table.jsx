@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import { convertFileSrc, invoke } from "@tauri-apps/api/core";
-import { message } from "@tauri-apps/plugin-dialog";
 
 const Table = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,7 +69,7 @@ const Table = () => {
               </div>
               <div className="flex justify-center col-span-1 text-center p-2">
                 <img
-                  src={member.image || "../../public/images.png"}
+                  src={convertFileSrc(member.image) || "../../public/images.png"}
                   className="w-20 h-20 rounded object-cover"
                   alt="Member"
                 />

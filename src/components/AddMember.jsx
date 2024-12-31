@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const AddMember = () => {
+  const [imageName, setImageName] = useState("");
+  const [imageData, setImageData] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
   const {
     register,
@@ -19,20 +21,14 @@ const AddMember = () => {
     };
     console.log(data);
     try {
-      const resp = await invoke('add_member', {content: Data, imgdata: imagePreview});
+      console.log(imageData);
+      console.log({content: Data, bytes: imageData, img_name: imageName});
+      const resp = await invoke('add_member', {content: Data, imgbytes: Array.from(imageData), imgname: imageName});
       console.log(resp);
       reset(); // Reset form fields
+      setImageName(""); 
+      setImageData(null); 
       setImagePreview(null);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const converBase64 = async (file) => {
-    try {
-      const resp = await invoke('image_to_base64', {image: Array.from(file)});
-      
-      setImagePreview(resp);
     } catch (error) {
       console.log(error);
     }
@@ -42,6 +38,8 @@ const AddMember = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      setImageName(file.name);
+      setImagePreview(URL.createObjectURL(file));
 
       const reader = new FileReader();
 
@@ -49,8 +47,11 @@ const AddMember = () => {
       reader.onloadend = () => {
         const arrayBuffer = reader.result;
         const uint8Array = new Uint8Array(arrayBuffer);
+
         // Send file as binary arrayBuffer
-        converBase64(uint8Array);
+
+        setImageData(uint8Array);
+        console.log(uint8Array);
       };
 
       reader.readAsArrayBuffer(file); // Read file as binary buffer

@@ -1,6 +1,5 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use async_once::AsyncOnce;
-use base64ct::{Base64, Encoding};
 use chrono::Local;
 use directories::BaseDirs;
 use lazy_static::lazy_static;
@@ -9,6 +8,7 @@ use surrealdb::{
     engine::local::{Db, RocksDb},
     RecordId, Surreal,
 };
+use tokio::fs;
 
 lazy_static! {
     pub static ref DIR: String = format!(
@@ -45,22 +45,29 @@ async fn greet(name: String) {
 }
 
 #[tauri::command]
-async fn image_to_base64(image: Vec<u8>) -> Result<String, String> {
-    Ok(format!("data:image/png;base64,{}",Base64::encode_string(&image)))
-}
-
-#[tauri::command]
 async fn add_member(
     content: FMembers,
-    imgdata: String,
+    imgbytes: Vec<u8>,
+    imgname: String,
 ) -> Result<String, String> {
     let today = Local::now().date_naive().format("%d/%m/%Y").to_string();
     let member_id = rand::random::<u32>();
+    let img_path = format!(
+        "{}/{}_{}_{}",
+        DIR.as_str(),
+        member_id,
+        content.name,
+        imgname
+    );
+
+    if let Err(e) = fs::write(&img_path, imgbytes).await {
+        return Err(e.to_string());
+    }
 
     let members = Members {
         issue_date: today,
         member_id,
-        image: imgdata,
+        image: img_path,
         name: content.name,
         birthday: content.birthday,
         address: content.address,
@@ -116,8 +123,7 @@ pub fn run() {
             greet,
             add_member,
             get_members,
-            search_member,
-            image_to_base64
+            search_member
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

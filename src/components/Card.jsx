@@ -3,7 +3,7 @@ import { QRCode } from "react-qr-code"; // Import QRCode from react-qr-code
 import img from "../../public/idk.svg";
 import mm from "../../public/images.png";
 import { useLocation, useParams } from "react-router-dom";
-import { convertFileSrc, invoke } from "@tauri-apps/api/core";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 const Card = () => {
   const location = useLocation();
@@ -17,32 +17,10 @@ const Card = () => {
 
   const [signImage, setSignImage] = useState(null); // State for storing the signature image
 
-  const converBase64 = async (file) => {
-    try {
-      const resp = await invoke('image_to_base64', {image: Array.from(file)});
-      
-      setSignImage(resp);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  
-  const handleSignChange = async (e) => {
+  const handleSignChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-
-      const reader = new FileReader();
-
-      // Use ArrayBuffer for better efficiency
-      reader.onloadend = () => {
-        const arrayBuffer = reader.result;
-        const uint8Array = new Uint8Array(arrayBuffer);
-        // Send file as binary arrayBuffer
-        converBase64(uint8Array);
-      };
-
-      reader.readAsArrayBuffer(file); // Read file as binary buffer
+      setSignImage(URL.createObjectURL(file)); // Create a URL for the uploaded file
     }
   };
 
@@ -96,7 +74,7 @@ const Card = () => {
             <div className="w-24 h-24">
               <img
                 className=" object-cover w-full h-full "
-                src={member.image}
+                src={convertFileSrc(member.image)}
                 alt="User Image"
               />
             </div>

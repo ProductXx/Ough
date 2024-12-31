@@ -1,11 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 const AddMember = () => {
   const [imageName, setImageName] = useState("");
   const [imageData, setImageData] = useState(null);
   const [imagePreview, setImagePreview] = useState(null); // State for image preview
+  const nav = useNavigate()
   const {
     register,
     handleSubmit,
@@ -25,10 +27,11 @@ const AddMember = () => {
       console.log({content: Data, bytes: imageData, img_name: imageName});
       const resp = await invoke('add_member', {content: Data, imgbytes: Array.from(imageData), imgname: imageName});
       console.log(resp);
-      reset(); // Reset form fields
+      reset(); 
       setImageName(""); 
       setImageData(null); 
       setImagePreview(null);
+      nav('/')
     } catch (error) {
       console.log(error);
     }

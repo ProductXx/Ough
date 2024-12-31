@@ -4,14 +4,18 @@ import Table from "./components/Table";
 import Card from "./components/Card";
 import AddMember from "./components/AddMember";
 import "./App.css";
+import Nav from "./components/Nav";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Table />} />
-      <Route path="/print" element={<Card />} />
-      <Route path="/create" element={<AddMember />} />
-    </Routes>
+    <>
+      <Nav/>
+      <Routes>
+        <Route path="/" element={<Table />} />
+        <Route path="/print" element={<Card />} />
+        <Route path="/create" element={<AddMember />} />
+      </Routes>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
+
 import { invoke } from "@tauri-apps/api/core";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -21,7 +22,7 @@ const AddMember = () => {
       address: data.address,
       birthday: data.birthday,
       region: data.region,
-      nationalId: data.nationalId,
+      nationalid: data.nationalid,
     };
     console.log(data);
     try {
@@ -127,13 +128,6 @@ const AddMember = () => {
             type="text"
             {...register("username", {
               required: "Username is required",
-              minLength: { value: 6, message: "Minimum length is 6" },
-              maxLength: { value: 16, message: "Maximum length is 16" },
-              pattern: {
-                value: /^[a-zA-Z0-9_]+$/,
-                message:
-                  "Username must contain only letters, numbers, and underscores",
-              },
             })}
             className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -214,22 +208,22 @@ const AddMember = () => {
         {/* National ID */}
         <div>
           <label
-            htmlFor="nationalId"
+            htmlFor="nationalid"
             className="block text-lg font-medium text-gray-700"
           >
             National ID
           </label>
           <input
-            id="nationalId"
+            id="nationalid"
             type="text"
-            {...register("nationalId", {
+            {...register("nationalid", {
               required: "National ID is required",
             })}
             className="w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          {errors.nationalId && (
+          {errors.nationalid && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.nationalId.message}
+              {errors.nationalid.message}
             </p>
           )}
         </div>
@@ -247,3 +241,4 @@ const AddMember = () => {
 };
 
 export default AddMember;
+

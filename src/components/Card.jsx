@@ -40,7 +40,7 @@ const Card = () => {
             </div>
             <img className="shadow-lg h-20" src={mm} alt="ID Card Logo" />
           </div>
-          <p>Identification Number : {member.id}</p>
+          <p>Identification Number : {member.member_id}</p>
         </div>
         <div className="flex justify-between p-5 gap-10 text-red-800">
           <div className="flex flex-col gap-5 justify-between items-start">
@@ -66,7 +66,7 @@ const Card = () => {
               <div className="flex self-start text-[12px] gap-5">
                 <p>Initiator Monk</p>
                 <p>Date of Issue {member.issue_date}</p>
-                <p>National Id {member.national_id}</p>
+                <p>National Id {member.nationalid}</p>
               </div>
             </div>
           </div>

@@ -25,11 +25,13 @@ lazy_static! {
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Members {
     pub issue_date: String,
-    pub member_id: u32,
+    pub member_id: String,
     pub image: String,
     pub name: String,
     pub birthday: String,
     pub address: String,
+    pub region: String,
+    pub nationalid: String,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -37,6 +39,13 @@ pub struct FMembers {
     pub name: String,
     pub birthday: String,
     pub address: String,
+    pub region: String,
+    pub nationalid: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+struct Total {
+    count: u32,
 }
 
 #[tauri::command]
@@ -45,13 +54,27 @@ async fn greet(name: String) {
 }
 
 #[tauri::command]
+async fn delete_member(id: String) -> Result<String, String> {
+    let db = DB.get().await;
+    db.use_ns("ns").use_db("db").await.unwrap();
+
+    db.delete::<Option<Members>>(RecordId::from_table_key("members", id)).await.unwrap();
+    Ok("All Good!!".to_string())
+}
+
+#[tauri::command]
 async fn add_member(
     content: FMembers,
     imgbytes: Vec<u8>,
     imgname: String,
 ) -> Result<String, String> {
+    let db = DB.get().await;
+    db.use_ns("ns").use_db("db").await.unwrap();
+
     let today = Local::now().date_naive().format("%d/%m/%Y").to_string();
-    let member_id = rand::random::<u32>();
+
+    let mut member_id = String::new();
+
     let img_path = format!(
         "{}/{}_{}_{}",
         DIR.as_str(),
@@ -59,6 +82,18 @@ async fn add_member(
         content.name,
         imgname
     );
+
+    let members_count = db.select::<Option<Total>>(RecordId::from_table_key("members_ids", "total_ids")).await.unwrap();
+
+    if let Some(total) = members_count {
+        member_id = format!("{:05}", total.count + 1);
+        let total = Total { count: total.count + 1 };
+        db.update::<Option<Total>>(RecordId::from_table_key("members_ids", "total_ids")).content(total).await.unwrap().unwrap();
+    } else {
+        member_id = format!("{:05}", 1);
+        let total = Total { count: 1 };
+        db.create::<Option<Total>>(RecordId::from_table_key("members_ids", "total_ids")).content(total).await.unwrap().unwrap();
+    }
 
     if let Err(e) = fs::write(&img_path, imgbytes).await {
         return Err(e.to_string());
@@ -71,10 +106,9 @@ async fn add_member(
         name: content.name,
         birthday: content.birthday,
         address: content.address,
+        region: content.region,
+        nationalid: content.nationalid,
     };
-
-    let db = DB.get().await;
-    db.use_ns("ns").use_db("db").await.unwrap();
 
     db.create::<Option<Members>>(RecordId::from_table_key(
         "members",
@@ -123,6 +157,7 @@ pub fn run() {
             greet,
             add_member,
             get_members,
+            delete_member,
             search_member
         ])
         .run(tauri::generate_context!())

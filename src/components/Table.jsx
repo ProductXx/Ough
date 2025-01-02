@@ -35,10 +35,6 @@ const Table = () => {
     }
   };
 
-  const filteredData = members.filter((item) =>
-    item.name?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const handleDelete = (member) => {
     setMemberToDelete(member);
     setShowModal(true);
@@ -97,8 +93,8 @@ const Table = () => {
         </div>
       </div>
       <div className="h-[75vh] overflow-y-scroll w-full">
-        {filteredData.length > 0 ? (
-          filteredData.map((member, index) => (
+        {members.length > 0 ? (
+          members.map((member, index) => (
             <div
               key={index}
               className="grid grid-cols-8 w-full border py-2 items-center"
